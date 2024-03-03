@@ -3,6 +3,13 @@ import { CreateVendorInput } from "../dto";
 import { Vendor } from "../models";
 import { GeneratePassword, GenerateSalt } from "../utility";
 
+export const FindVendor = async (id: string | undefined, email?: string) => {
+  if(email) {
+    const vendor = await Vendor.findOne({email: email})
+    return vendor;
+  }
+  return await Vendor.findById(id)
+}
 
 export const CreateVendor = async (
   req: Request,
@@ -20,14 +27,12 @@ export const CreateVendor = async (
     phone,
   } = <CreateVendorInput>req.body;
 
-  const existingVendor = await Vendor.findOne({
-    email: email,
-  });
+  const existingVendor = await FindVendor(undefined, email)
   if (existingVendor) {
     return res.json({ message: "Vendor already exists with that email" });
   }
 
-  const salt = await GenerateSalt()
+  const salt = await GenerateSalt();
   const hashPassword = await GeneratePassword(password, salt);
 
   const createVendor = await Vendor.create({
@@ -51,10 +56,27 @@ export const GetVendors = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {};
+) => {
+  const vendors = await Vendor.find();
+
+  if (vendors.length != 0) {
+    return res.json(vendors);
+  }
+
+  return res.json({ message: "No vendors found." });
+};
 
 export const GetVendorById = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {};
+) => {
+  const vendorId = req.params.id;
+  const vendor = await FindVendor(vendorId)
+
+  if (!vendor) {
+    return res.json({ message: "Vendor not found." });
+  }
+
+  return res.json(vendor);
+};
