@@ -1,27 +1,18 @@
-import express from "express";
-import bodyParser from "body-parser";
-import mongoose from "mongoose";
-import { AdminRoute, VendorRoute } from "./routes";
-import { MONGO_URI } from "./config";
-import path from 'path'
-const app = express();
+import express from 'express'
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/images', express.static(path.join(__dirname, 'images')))
+import App from './services/ExpressApp'
+import Database from './services/Database'
 
-app.use("/admin", AdminRoute);
-app.use("/vendor", VendorRoute);
+const StartServer = async () => {
+  const app = express()
 
-mongoose
-  .connect(MONGO_URI as string)
-  .then((result) => {
-    console.log("Connected to MongoDB successfully");
+  await Database()
+
+  await App(app)
+
+  app.listen(8000, () =>{
+    console.log('Listening on PORT 8000')
   })
-  .catch((err) => {
-    console.log("Error connecting to Mongo", err);
-  });
+}
 
-app.listen(8000, () => {
-  console.log("App is listening to the port 8000");
-});
+StartServer()
