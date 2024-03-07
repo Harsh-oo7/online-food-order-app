@@ -6,6 +6,7 @@ export default async () => {
     await mongoose.connect(MONGO_URI as string);
   } catch (err) {
     console.log(err);
+    return;
   }
 
   console.log("Connected To MongoDB...");

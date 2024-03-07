@@ -1,7 +1,11 @@
 import express from 'express'
 
 import App from './services/ExpressApp'
+import dotenv from 'dotenv'
+dotenv.config()
 import Database from './services/Database'
+import { PORT } from './config'
+
 
 const StartServer = async () => {
   const app = express()
@@ -10,8 +14,8 @@ const StartServer = async () => {
 
   await App(app)
 
-  app.listen(8000, () =>{
-    console.log('Listening on PORT 8000')
+  app.listen(PORT, () =>{
+    console.log(`Listening on PORT ${PORT}`)
   })
 }
 
