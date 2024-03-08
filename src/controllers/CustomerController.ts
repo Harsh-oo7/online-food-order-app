@@ -4,6 +4,7 @@ import {
   CreateCustomerInputs,
   UserLoginInputs,
   EditCustomerProfileInputs,
+  OrderInputs,
 } from "../dto/Customer.dto";
 import { validate } from "class-validator";
 import {
@@ -14,7 +15,8 @@ import {
   ValidatePassword,
   onRequestOTP,
 } from "../utility";
-import { Customer } from "../models";
+import { Customer, Food } from "../models";
+import { Order } from "../models/Order";
 
 export const CustomerSignUp = async (
   req: Request,
@@ -57,6 +59,7 @@ export const CustomerSignUp = async (
     lat: 0,
     lng: 0,
     phone: phone,
+    orders: [],
   });
 
   if (result) {
@@ -238,4 +241,92 @@ export const EditCustomerProfile = async (
   }
 
   return res.json({ message: "Error while updating profile" });
+};
+
+export const CreateOrder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const customer = req.user;
+
+  if (customer) {
+    const orderId = `${Math.floor(Math.random() * 89999) + 1000}`;
+
+    let profile = await Customer.findById(customer._id);
+
+    const cart = <[OrderInputs]>req.body;
+
+    let cartItems = Array();
+    let netAmount = 0;
+
+    const foods = await Food.find({
+      _id: {
+        $in: cart.map((item) => item._id),
+      },
+    });
+
+    foods.map((food) => {
+      cart.map(({ _id, unit }) => {
+        if (food._id == _id) {
+          netAmount += food.price * unit;
+          cartItems.push({ food, unit });
+        }
+      });
+    });
+
+    if (cartItems) {
+      const currentOrder = await Order.create({
+        orderId: orderId,
+        items: cartItems,
+        totalAmount: netAmount,
+        orderDate: new Date(),
+        paidThrough: "COD",
+        paymentResponse: "",
+        orderStatus: "Waiting",
+      });
+
+      if (currentOrder) {
+        profile?.orders.push(currentOrder);
+        const profileResponse = await profile?.save();
+
+        return res.json(currentOrder);
+      }
+    }
+  }
+  return res.json({ message: "Error while creating order" });
+};
+
+export const GetOrders = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const customer = req.user;
+
+  if (customer) {
+    const profile = await Customer.findById(customer._id).populate("orders")
+
+    if(profile) {
+      return res.json(profile.orders)
+    }
+  }
+
+  return res.json({ message: "NO orders found" });
+};
+
+export const GetOrderById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const orderId = req.params.id;
+
+  if(orderId) {
+    const order = await Order.findById(orderId).populate('items.food')
+
+    return res.json(order)
+  }
+
+  return res.json({ message: "NO orders found" });
 };
