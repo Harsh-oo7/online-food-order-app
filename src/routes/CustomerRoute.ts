@@ -1,10 +1,13 @@
 import express, { Request, Response, NextFunction } from "express";
 import {
+  AddToCart,
   CreateOrder,
   CustomerLogin,
   CustomerSignUp,
   CustomerVerify,
+  DeleteCart,
   EditCustomerProfile,
+  GetCart,
   GetCustomerProfile,
   GetOrderById,
   GetOrders,
@@ -39,5 +42,11 @@ router.patch("/profile", EditCustomerProfile);
 router.post('/create-order', CreateOrder)
 router.get('/orders', GetOrders)
 router.get('/order/:id', GetOrderById)
+
+// cart
+
+router.post('/cart', AddToCart)
+router.get('/cart', GetCart)
+router.delete('/cart', DeleteCart)
 
 export { router as CustomerRoute };

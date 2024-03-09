@@ -8,6 +8,12 @@ export interface OrderDoc extends Document {
   paidThrough: string;
   paymentResponse: string;
   orderStatus: string;
+  vendorId: string;
+  remarks: string;
+  deliveryId: string;
+  appliedOffers: boolean;
+  offerId: string;
+  readyTime: number;
 }
 
 const OrderSchema = new Schema(
@@ -15,6 +21,10 @@ const OrderSchema = new Schema(
     orderId: {
       type: String,
       required: true,
+    },
+    vendorId: {
+      type: String,
+      required: true
     },
     items: [
       {
@@ -44,6 +54,21 @@ const OrderSchema = new Schema(
     },
     orderStatus: {
       type: String,
+    },
+    remarks: {
+      type: String,
+    },
+    deliveryId:  {
+      type: String,
+    },
+    appliedOffers:  {
+      type: Boolean,
+    },
+    offerId:  {
+      type: String,
+    },
+    readyTime:  {
+      type: Number,
     },
   },
   {

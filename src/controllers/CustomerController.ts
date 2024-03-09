@@ -265,10 +265,12 @@ export const CreateOrder = async (
         $in: cart.map((item) => item._id),
       },
     });
+    let vendorId;
 
     foods.map((food) => {
       cart.map(({ _id, unit }) => {
         if (food._id == _id) {
+          vendorId = food.vendorId;
           netAmount += food.price * unit;
           cartItems.push({ food, unit });
         }
@@ -279,14 +281,21 @@ export const CreateOrder = async (
       const currentOrder = await Order.create({
         orderId: orderId,
         items: cartItems,
+        vendorId: vendorId,
         totalAmount: netAmount,
         orderDate: new Date(),
         paidThrough: "COD",
         paymentResponse: "",
         orderStatus: "Waiting",
+        remarks: "",
+        deliveryId: "",
+        appliedOffers: false,
+        offerId: "",
+        readyTime: 45,
       });
 
-      if (currentOrder) {
+      if (currentOrder && profile) {
+        profile.cart = [] as any
         profile?.orders.push(currentOrder);
         const profileResponse = await profile?.save();
 
@@ -305,10 +314,10 @@ export const GetOrders = async (
   const customer = req.user;
 
   if (customer) {
-    const profile = await Customer.findById(customer._id).populate("orders")
+    const profile = await Customer.findById(customer._id).populate("orders");
 
-    if(profile) {
-      return res.json(profile.orders)
+    if (profile) {
+      return res.json(profile.orders);
     }
   }
 
@@ -322,11 +331,116 @@ export const GetOrderById = async (
 ) => {
   const orderId = req.params.id;
 
-  if(orderId) {
-    const order = await Order.findById(orderId).populate('items.food')
+  if (orderId) {
+    const order = await Order.findById(orderId).populate("items.food");
 
-    return res.json(order)
+    return res.json(order);
   }
 
   return res.json({ message: "NO orders found" });
+};
+
+export const AddToCart = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const customer = req.user;
+
+  if (customer) {
+    const profile = await Customer.findById(customer._id).populate("cart.food");
+    let cartItems = Array();
+
+    const { _id, unit } = <OrderInputs>req.body;
+    const food = await Food.findById(_id);
+
+    if (food) {
+      if (profile) {
+        cartItems = profile.cart;
+
+        if (cartItems.length > 0) {
+          let existFoodItem = cartItems.filter(
+            (item) => item.food._id.toString() === _id
+          );
+
+          if (existFoodItem.length > 0) {
+            let index = cartItems.indexOf(existFoodItem[0]);
+
+            if (unit > 0) {
+              cartItems[index] = {
+                food,
+                unit,
+              };
+            } else {
+              cartItems.splice(index, 1);
+            }
+
+          } else {
+            cartItems.push({
+              food,
+              unit,
+            });
+          }
+
+
+        } else {
+          cartItems.push({
+            food,
+            unit,
+          });
+        }
+
+        if(cartItems) {
+          profile.cart = cartItems as any;
+          const cartResult = await profile.save();
+          return res.json(cartResult.cart)
+        }
+
+      }
+    }
+  }
+
+  return res.json({ message: "Unable to add item to cart" });
+};
+
+export const GetCart = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const customer = req.user;
+
+  if(customer) {
+    const profile = await Customer.findById(customer._id).populate('cart.food')
+
+    if(profile) {
+      return res.json(profile.cart)
+    }
+
+  }
+
+  return res.json({ message: "Cart is empty" });
+};
+
+export const DeleteCart = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const customer = req.user;
+
+  if(customer) {
+    const profile = await Customer.findById(customer._id).populate('cart.food')
+
+    if(profile) {
+
+      profile.cart = [] as any
+      const cartResult = await profile.save();
+
+      return res.json(cartResult)
+    }
+
+  }
+
+  return res.json({ message: "Cart is already empty" });
 };
