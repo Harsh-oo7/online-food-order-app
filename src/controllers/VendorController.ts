@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { EditVendorInput, VendorLoginInputs } from "../dto";
+import { CreateOfferInputs, EditVendorInput, VendorLoginInputs } from "../dto";
 import { FindVendor } from "./AdminController";
 import { GenerateSignature, ValidatePassword } from "../utility";
 import { CreateFoodInputs } from "../dto/Food.dto";
-import { Food, Order } from "../models";
+import { Food, Offer, Order } from "../models";
 
 export const VendorLogin = async (
   req: Request,
@@ -84,15 +84,13 @@ export const UpdateVendorCoverImage = async (
 ) => {
   const user = req.user;
   if (user) {
-
     const vendor = await FindVendor(user._id);
 
     if (vendor) {
+      const files = req.files as [Express.Multer.File];
+      const images = files.map((file: Express.Multer.File) => file.filename);
 
-      const files = req.files as [Express.Multer.File]
-      const images = files.map((file: Express.Multer.File) => file.filename)
-
-      vendor.coverImages.push(...images)
+      vendor.coverImages.push(...images);
 
       const result = await vendor.save();
 
@@ -139,9 +137,8 @@ export const AddFood = async (
     const vendor = await FindVendor(user._id);
 
     if (vendor) {
-
-      const files = req.files as [Express.Multer.File]
-      const images = files.map((file: Express.Multer.File) => file.filename)
+      const files = req.files as [Express.Multer.File];
+      const images = files.map((file: Express.Multer.File) => file.filename);
 
       const createdFood = await Food.create({
         vendorId: vendor._id,
@@ -172,10 +169,10 @@ export const GetFoods = async (
 ) => {
   const user = req.user;
   if (user) {
-    const foods = await Food.find({vendorId: user._id})
+    const foods = await Food.find({ vendorId: user._id });
 
-    if(foods) {
-      return res.json(foods)
+    if (foods) {
+      return res.json(foods);
     }
   }
 
@@ -187,17 +184,18 @@ export const GetCurrentOrders = async (
   res: Response,
   next: NextFunction
 ) => {
-
   const user = req.user;
-  if(user) {
-    const orders = await Order.find({vendorId: user._id}).populate('items.food')
-    if(orders) {
-      return res.json(orders)
+  if (user) {
+    const orders = await Order.find({ vendorId: user._id }).populate(
+      "items.food"
+    );
+    if (orders) {
+      return res.json(orders);
     }
   }
 
   return res.json({ message: "No Orders found" });
-}
+};
 
 export const GetOrderDetails = async (
   req: Request,
@@ -206,16 +204,15 @@ export const GetOrderDetails = async (
 ) => {
   const orderId = req.params.id;
 
-  if(orderId) {
-    const order = await Order.findById(orderId).populate('items.food')
-    if(order) {
-      return res.json(order)
+  if (orderId) {
+    const order = await Order.findById(orderId).populate("items.food");
+    if (order) {
+      return res.json(order);
     }
   }
 
   return res.json({ message: "No Orders found" });
-
-}
+};
 
 export const ProcessOrder = async (
   req: Request,
@@ -224,20 +221,152 @@ export const ProcessOrder = async (
 ) => {
   const orderId = req.params.id;
 
-  const { status, remarks, time} = req.body;
+  const { status, remarks, time } = req.body;
 
-  if(orderId) {
-    const order = await Order.findById(orderId).populate('items.food')
-    if(order) {
-      order.orderStatus = status
-      order.remarks = remarks
-      if(time) order.readyTime = time
+  if (orderId) {
+    const order = await Order.findById(orderId).populate("items.food");
+    if (order) {
+      order.orderStatus = status;
+      order.remarks = remarks;
+      if (time) order.readyTime = time;
 
-      const orderResult = await order.save()
-      return res.json(orderResult)
+      const orderResult = await order.save();
+      return res.json(orderResult);
     }
   }
 
   return res.json({ message: "No Orders found" });
+};
 
-}
+export const GetOffers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const user = req.user;
+  if (user) {
+    const offers = await Offer.find().populate("vendors");
+    let currentOffers = Array();
+    if (offers) {
+      offers.map((item) => {
+        if (item.vendors) {
+          item.vendors.map((vendor) => {
+            if (vendor._id.toString() == user._id) {
+              currentOffers.push(item);
+            }
+          });
+        }
+
+        if (item.offerType == "GENERIC") {
+          currentOffers.push(item);
+        }
+      });
+    }
+
+    return res.json(currentOffers);
+  }
+  return res.json({ message: "No Offers found" });
+};
+
+export const AddOffer = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const user = req.user;
+
+  if (user) {
+    const {
+      title,
+      description,
+      offerType,
+      offerAmount,
+      pincode,
+      promocode,
+      promoType,
+      startValidity,
+      endValidity,
+      bank,
+      bins,
+      isActive,
+      minValue,
+    } = <CreateOfferInputs>req.body;
+
+    const vendor = await FindVendor(user._id);
+    if (vendor) {
+      const offer = await Offer.create({
+        title,
+        description,
+        offerType,
+        offerAmount,
+        pincode,
+        promocode,
+        promoType,
+        startValidity,
+        endValidity,
+        bank,
+        bins,
+        isActive,
+        minValue,
+        vendors: [vendor],
+      });
+
+      return res.json(offer);
+    }
+  }
+
+  return res.json({ message: "Offer is not created." });
+};
+
+export const EditOffer = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const user = req.user;
+  const offerId = req.params.id;
+
+  if (user) {
+    const {
+      title,
+      description,
+      offerType,
+      offerAmount,
+      pincode,
+      promocode,
+      promoType,
+      startValidity,
+      endValidity,
+      bank,
+      bins,
+      minValue,
+      isActive,
+    } = <CreateOfferInputs>req.body;
+
+    const currentOffer = await Offer.findById(offerId);
+
+    if (currentOffer) {
+      const vendor = await FindVendor(user._id);
+
+      if (vendor) {
+        (currentOffer.title = title),
+          (currentOffer.description = description),
+          (currentOffer.offerType = offerType),
+          (currentOffer.offerAmount = offerAmount),
+          (currentOffer.pincode = pincode),
+          (currentOffer.promoType = promoType),
+          (currentOffer.startValidity = startValidity),
+          (currentOffer.endValidity = endValidity),
+          (currentOffer.bank = bank),
+          (currentOffer.isActive = isActive),
+          (currentOffer.minValue = minValue);
+
+        const result = await currentOffer.save();
+
+        return res.status(200).json(result);
+      }
+    }
+  }
+
+  return res.json({ message: "Unable to add Offer!" });
+};
