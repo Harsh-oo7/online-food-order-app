@@ -1,0 +1,913 @@
+{
+	"info": {
+		"_postman_id": "e7b6efad-7a51-42b7-8971-f236e5c52166",
+		"name": "Online Food Order App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22575644"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Add vendor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"harsh\",\n    \"address\": \"address\",\n    \"pincode\": \"pincode1\",\n    \"email\": \"tes12t@tes.com\",\n    \"password\": \"password\",\n    \"ownerName\": \"ownerName\",\n    \"phone\": \"phone\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/admin/vendor",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"vendor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Vendors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/admin/vendors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"vendors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Vendor by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/admin/vendor/65e34d42121b810dc2718353",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"admin",
+								"vendor",
+								"65e34d42121b810dc2718353"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vendor",
+			"item": [
+				{
+					"name": "Login Vendor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@tes.com\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/vendor/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"vendor",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vendor Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/vendor/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"vendor",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": \"new address\",\n    \"name\": \"new name\",\n    \"phone\": \"new phone\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/vendor/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"vendor",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cover image",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/Users/harshkaneria/Downloads/28267842_7.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/vendor/coverimage",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"vendor",
+								"coverimage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Service",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/vendor/service",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"vendor",
+								"service"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Food",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "\"pizza\"",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "\"this is pizza\"",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "\"any\"",
+									"type": "text"
+								},
+								{
+									"key": "foodType",
+									"value": "\"veg\"",
+									"type": "text"
+								},
+								{
+									"key": "readyTime",
+									"value": "15",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "200",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/Users/harshkaneria/Downloads/28267842_7.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/vendor/food",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"vendor",
+								"food"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/vendor/foods",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"vendor",
+								"foods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/vendor/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"vendor",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order Status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"ACCEPT\",\n    \"remarks\": \"\",\n    \"time\": 30\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/vendor/order/65eb3bedf163aa930504d046/process",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"vendor",
+								"order",
+								"65eb3bedf163aa930504d046",
+								"process"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/vendor/order/65eb3bedf163aa930504d046",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"vendor",
+								"order",
+								"65eb3bedf163aa930504d046"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Offer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"10 off \",\n      \"description\": \"for every order get 10 off\",\n      \"offerType\": \"VENDOR\",\n      \"offerAmount\": 100,\n      \"pincode\": \"233234\",\n      \"promocode\": \"OFFER100\",\n      \"promoType\": \"ALL\",\n      \"startValidity\": \"\",\n      \"endValidity\": \"\",\n      \"bank\": \"\",\n      \"bins\": \"\",\n      \"isActive\": true, \n      \"minValue\": 250\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/vendor/offer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"vendor",
+								"offer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Offers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/vendor/offers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"vendor",
+								"offers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Offers Copy",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"10 off on spe\",\n      \"description\": \"for every order get 10 off\",\n      \"offerType\": \"VENDOR\",\n      \"offerAmount\": 100,\n      \"pincode\": \"233234\",\n      \"promocode\": \"OFFER100\",\n      \"promoType\": \"ALL\",\n      \"startValidity\": \"\",\n      \"endValidity\": \"\",\n      \"bank\": \"\",\n      \"bins\": \"\",\n      \"isActive\": true, \n      \"minValue\": 250\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/vendor/offer/65ebf0cfe667071df41aa248",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"vendor",
+								"offer",
+								"65ebf0cfe667071df41aa248"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWU0OTA5ZWE1MDZmYzU1MTFiNjU0YWMiLCJlbWFpbCI6InRlc3RAdGVzLmNvbSIsImZvb2RUeXBlcyI6W10sIm5hbWUiOiJoYXJzaCIsImlhdCI6MTcwOTkxNTMzMCwiZXhwIjoxNzEwMDAxNzMwfQ.gEK_wA_h296aumQ8I5CxuJQrgWYP_Nuj2himPk-5ifY",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Shopping",
+			"item": [
+				{
+					"name": "Food Availability",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/pincode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"pincode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Top Restaurant",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/top-restaurants/pincode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"top-restaurants",
+								"pincode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Foods in 30 min",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/foods-in-30-min/pincode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"foods-in-30-min",
+								"pincode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Food",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/search/pincode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"search",
+								"pincode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Restaurant by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/restaurant/65e4909ea506fc5511b654ac",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"restaurant",
+								"65e4909ea506fc5511b654ac"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Sign up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@gmail.com\",\n    \"password\": \"password\",\n    \"phone\": \"9890891232\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/customer/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"customer",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify OTP",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"otp\": 766414\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/customer/verify",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"customer",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@gmail.com\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/customer/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"customer",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\"_id\": \"65e491c1b540ca33ec40ab34\", \"unit\": 2},\n    {\"_id\": \"65e4916ea506fc5511b654b0\", \"unit\": 2}\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/customer/create-order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"customer",
+								"create-order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/customer/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"customer",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/customer/order/65e9e9cb64c582d79f17a528",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"customer",
+								"order",
+								"65e9e9cb64c582d79f17a528"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OTP",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/customer/otp",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"customer",
+								"otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/customer/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"customer",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Harsh\",\n    \"lastName\": \"Kaneria\",\n    \"address\": \"new add 1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/customer/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"customer",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add item to cart",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"_id\": \"65e4916ea506fc5511b654b0\",\n   \"unit\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/customer/cart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"customer",
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Cart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/customer/cart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"customer",
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Cart Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/customer/cart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"customer",
+								"cart"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWU3NGQ0MjU1ZmZhNjkyNTM3NmEwMGEiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwidmVyaWZpZWQiOnRydWUsImlhdCI6MTcwOTkwNDIyOSwiZXhwIjoxNzA5OTkwNjI5fQ.mBDGgW3OWz2-wMBR_paRFzUnj7iOEVFUlzfM3sNV7iY",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
